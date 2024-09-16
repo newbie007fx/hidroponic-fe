@@ -1,4 +1,45 @@
-const AutomationHistory = () => {
+import { useEffect, useState } from "react";
+import automationService from "../../services/automation.service";
+import moment from "moment";
+import useWebSocket from "react-use-websocket";
+
+const AutomationHistory = ({ activePlant }) => {
+  const dataType = "automation";
+  const [automations, setAutomations] = useState([]);
+
+  const { lastJsonMessage } = useWebSocket("ws://localhost:8183/ws", {
+    queryParams: { type: dataType },
+    onOpen: () => console.log("opened"),
+    shouldReconnect: (closeEvent) => {
+      return true;
+    },
+    reconnectAttempts: 5,
+    reconnectInterval: (attemptNumber) => {
+      return Math.min(Math.pow(2, attemptNumber + 1) * 1000, 60000);
+    },
+  });
+
+  useEffect(() => {
+    if (activePlant === null) {
+      return;
+    }
+
+    let params = {
+      limit: 8,
+      plant_id: activePlant?.plant_id
+    }
+    automationService.getAllAutomation(params).then(
+      (response) => {
+        if (response.data.data) {
+          setAutomations(response.data.data);
+        }
+      }).catch(
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, [activePlant, lastJsonMessage]);
+
   return (
     <div className="card h-100">
       <div className="card-header d-flex align-items-center justify-content-between">
@@ -6,158 +47,30 @@ const AutomationHistory = () => {
       </div>
       <div className="card-body">
         <ul className="p-0 m-0">
-          <li className="d-flex mb-4 pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/paypal.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Paypal</small>
-                <h6 className="mb-0">Send money</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">+82.6</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
-          <li className="d-flex mb-4 pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/wallet.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Wallet</small>
-                <h6 className="mb-0">Mac'D</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">+270.69</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
-          <li className="d-flex mb-4 pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/chart.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Transfer</small>
-                <h6 className="mb-0">Refund</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">+637.91</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
-          <li className="d-flex mb-4 pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/chart.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Transfer</small>
-                <h6 className="mb-0">Refund</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">+637.91</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
-          <li className="d-flex mb-4 pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/cc-success.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Credit Card</small>
-                <h6 className="mb-0">Ordered Food</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">-838.71</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
-          <li className="d-flex mb-4 pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/wallet.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Wallet</small>
-                <h6 className="mb-0">Starbucks</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">+203.33</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
-          <li className="d-flex mb-4 pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/wallet.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Wallet</small>
-                <h6 className="mb-0">Starbucks</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">+203.33</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
-          <li className="d-flex pb-1">
-            <div className="avatar flex-shrink-0 me-3">
-              <img
-                src="../assets/img/icons/unicons/cc-warning.png"
-                alt="User"
-                className="rounded"
-              />
-            </div>
-            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div className="me-2">
-                <small className="text-muted d-block mb-1">Mastercard</small>
-                <h6 className="mb-0">Ordered Food</h6>
-              </div>
-              <div className="user-progress d-flex align-items-center gap-1">
-                <h6 className="mb-0">-92.45</h6>
-                <span className="text-muted">USD</span>
-              </div>
-            </div>
-          </li>
+          {automations &&
+            automations.map((automation, index) => (
+              <li className="d-flex mb-4 pb-1" key={index}>
+                <div className="avatar flex-shrink-0 me-3">
+                  <a href={"automations/" + automation.id}>
+                    <img
+                      src="../assets/img/icons/unicons/auto.png"
+                      alt="User"
+                      className="rounded"
+                    />
+                  </a>
+                </div>
+                <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                  <div className="me-2">
+                    <small className="text-muted d-block mb-1">{moment(automation.triggered_at).format("DD-MMMM-YYYY HH:mm:ss")}</small>
+                    <h6 className="mb-0">{"Automation running " + automation.duration + " seconds"}</h6>
+                  </div>
+                  <div className="user-progress d-flex align-items-center gap-1">
+                    <h6 className="mb-0">{automation.accuration}</h6>
+                    <span className="text-muted">%</span>
+                  </div>
+                </div>
+              </li>
+            ))}
         </ul>
       </div>
     </div>

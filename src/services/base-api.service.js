@@ -6,7 +6,6 @@ class BaseApiService {
   constructor() {
     this.session = axios.create({
       baseURL: process.env.REACT_APP_API_URL,
-      headers: authHeader(),
     });
 
     this.session.interceptors.response.use(
@@ -26,11 +25,11 @@ class BaseApiService {
     );
   }
 
-  get = (url) => this.session.get(url);
-  // post = (...params) => this.session.post(...params);
-  // put = (...params) => this.session.put(...params);
+  get = (url, params) => this.session.get(url, { params: params, headers: authHeader() });
+  post = (url, data) => this.session.post(url, data, { headers: authHeader() });
+  put = (url, data) => this.session.put(url, data, { headers: authHeader() });
   // patch = (...params) => this.session.patch(...params);
-  // remove = (...params) => this.session.delete(...params);
+  delete = (url) => this.session.delete(url, { headers: authHeader() });
 }
 
 export default BaseApiService;

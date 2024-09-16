@@ -9,7 +9,6 @@ const NutrionAreaChart = () => {
 
   useEffect(() => {
     nutritionWaterLevelService.getNutritionWaterLevel().then((response) => {
-      console.log(response.data);
       if (response.data.data) {
         const tempData = response.data.data?.map((val) => {
           return [val.created_at, val.value];

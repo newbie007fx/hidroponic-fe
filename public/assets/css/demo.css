@@ -122,3 +122,7 @@
   text-align: center;
   margin-top: 1rem;
 }
+
+td.value {
+  font-weight: bold;
+}

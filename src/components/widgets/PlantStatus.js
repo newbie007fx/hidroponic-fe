@@ -1,7 +1,7 @@
 import plantHelper from "../../helpers/plant";
 import { useSelector } from "react-redux";
 
-const PlantStatus = ({activePlant}) => {
+const PlantStatus = ({ activePlant }) => {
   const { user: currentUser } = useSelector((state) => state.auth);
 
   return (
@@ -19,16 +19,16 @@ const PlantStatus = ({activePlant}) => {
               <div>
                 <p className="mb-4">
                   Your plant age is{" "}
-                  {plantHelper.calculateAge(activePlant.actived_at, activePlant.plant_age)}{" "}
+                  {activePlant.current_age}{" "}
                   Days, the estimation of harvest date is at{" "}
                   {plantHelper.calculateHarvestDate(
-                    activePlant.actived_at,
+                    activePlant.activated_at,
                     activePlant.plant_age,
                     activePlant.harvest_age
                   )}
                 </p>
 
-                <a href="#/" className="btn btn-sm btn-outline-primary">
+                <a href={"plants/" + activePlant.id} className="btn btn-sm btn-outline-primary">
                   View Plant Detail
                 </a>
               </div>
@@ -38,7 +38,7 @@ const PlantStatus = ({activePlant}) => {
                   Go to Plants page to add and activate plant.
                 </p>
 
-                <a href="#/" className="btn btn-sm btn-outline-primary">
+                <a href="/plants" className="btn btn-sm btn-outline-primary">
                   View Plants Page
                 </a>
               </div>

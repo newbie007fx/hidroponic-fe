@@ -25,7 +25,6 @@ let menu, animate;
   let menuToggler = document.querySelectorAll('.layout-menu-toggle');
   menuToggler.forEach(item => {
     item.addEventListener('click', event => {
-      console.log("masuk");
       event.preventDefault();
       window.Helpers.toggleCollapsed();
     });

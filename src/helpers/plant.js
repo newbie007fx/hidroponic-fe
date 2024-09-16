@@ -1,7 +1,7 @@
 import dateFormat from "dateformat";
 
-const calculateAge = (activedAt, plantAge) => {
-    let plantDate = new Date(activedAt);
+const calculateAge = (activatedAt, plantAge) => {
+    let plantDate = new Date(activatedAt);
     let currentDate = new Date();
 
     let differenceTime = currentDate.getTime() - plantDate.getTime();
@@ -9,8 +9,8 @@ const calculateAge = (activedAt, plantAge) => {
     return plantAge + Math.round(differenceTime / (1000 * 3600 * 24));
   };
 
-  const calculateHarvestDate = (activedAt, plantAge, harvestAge) => {
-    let plantDate = new Date(activedAt);
+  const calculateHarvestDate = (activatedAt, plantAge, harvestAge) => {
+    let plantDate = new Date(activatedAt);
     let age = harvestAge - plantAge;
     plantDate.setDate(plantDate.getDate() + age);
 

@@ -1,12 +1,41 @@
-import React, {useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slices/auth";
 import EventBus from "../../common/EventBus";
 import { Navigate } from 'react-router-dom';
+import deviceStateService from "../../services/device-state.service";
+import useWebSocket from "react-use-websocket";
 
 const Navbar = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const dataType = "deviceState";
+  const [deviceState, setDeviceState] = useState(0);
+
+  const { lastJsonMessage } = useWebSocket("ws://localhost:8183/ws", {
+    queryParams: { type: dataType },
+    onOpen: () => console.log("opened"),
+    shouldReconnect: (closeEvent) => {
+      return true;
+    },
+    reconnectAttempts: 5,
+    reconnectInterval: (attemptNumber) => {
+      return Math.min(Math.pow(2, attemptNumber + 1) * 1000, 60000);
+    },
+  });
+
+  useEffect(() => {
+    deviceStateService.getDeviceState().then(
+      (response) => {
+        if (response.data.data) {
+          setDeviceState(response.data.data.state);
+        }
+      }).catch(
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, [lastJsonMessage]);
 
   const logOut = useCallback(() => {
     dispatch(logout());
@@ -43,6 +72,14 @@ const Navbar = () => {
       >
         <div className="navbar-nav align-items-center">
           <div className="nav-item d-flex align-items-center">
+            { (deviceState === 3 || lastJsonMessage?.state === 3 ) && (
+              <div className="d-flex automation-status">
+                <div className="spinner-border me-3" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <span>Automation is running</span>
+              </div>
+            )}
           </div>
         </div>
 

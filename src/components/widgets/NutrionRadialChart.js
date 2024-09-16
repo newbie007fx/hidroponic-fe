@@ -1,7 +1,6 @@
 import Chart from "react-apexcharts";
 import useWebSocket from "react-use-websocket";
 import React, { useState, useEffect } from "react";
-import plantHelper from "../../helpers/plant";
 
 const NutrionRadialChart = ({ activePlant }) => {
   const [todayTargetPpm, setTodayTargetPpm] = useState(0);
@@ -30,16 +29,11 @@ const NutrionRadialChart = ({ activePlant }) => {
       return;
     }
 
-    const plantAge = plantHelper.calculateAge(
-      activePlant?.actived_at,
-      activePlant?.plant_age
-    );
-
     const todayTarget = activePlant?.nutrition_targets.filter((val) => {
-      return val.plant_age === plantAge;
+      return val.plant_age === activePlant.current_age;
     });
     const yesterdayTarget = activePlant?.nutrition_targets.filter((val) => {
-      return val.plant_age === plantAge - 1;
+      return val.plant_age === activePlant.current_age - 1;
     });
     
     setTodayTargetPpm(todayTarget[0].target_ppm);
@@ -49,7 +43,9 @@ const NutrionRadialChart = ({ activePlant }) => {
   useEffect(() => {
     let value = lastJsonMessage?.value ?? 0;
     value = value > 0 ? (value / todayTargetPpm) * 100 : 0;
-    
+    if (value > 100) {
+      value = 100;
+    }
     updateData([value]);
   }, [lastJsonMessage, todayTargetPpm]);
 
@@ -88,7 +84,7 @@ const NutrionRadialChart = ({ activePlant }) => {
                 return 0;
               }
 
-              return parseInt((val / 100) * todayTargetPpm);
+              return lastJsonMessage?.value;
             },
           },
         },
@@ -137,7 +133,7 @@ const NutrionRadialChart = ({ activePlant }) => {
         <div className="d-flex">
           <div className="me-2">
             <span className="badge bg-label-primary p-2">
-              <i className="bx bx-dollar text-primary"></i>
+              <i className="bx bx-bullseye text-primary"></i>
             </span>
           </div>
           <div className="d-flex flex-column">
@@ -150,7 +146,7 @@ const NutrionRadialChart = ({ activePlant }) => {
         <div className="d-flex">
           <div className="me-2">
             <span className="badge bg-label-info p-2">
-              <i className="bx bx-wallet text-info"></i>
+              <i className="bx bx-target-lock text-info"></i>
             </span>
           </div>
           <div className="d-flex flex-column">

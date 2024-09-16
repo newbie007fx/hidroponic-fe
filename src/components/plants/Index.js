@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import plantService from "../../services/plant.service";
+import { Link } from "react-router-dom";
+import { PLANT_STATUS_MAP, PLANT_TYPE_MAP } from "../../constants/plant";
 
 const IndexPlant = () => {
   const [plants, setPlants] = useState([]);
   useEffect(() => {
     plantService.getAllPlant().then(
       (response) => {
-        setPlants(response.data.data);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+        if (response.data.data) {
+          setPlants(response.data.data);
+        }
+      }).catch(
+        (error) => {
+          console.log(error);
+        }
+      );
   }, []);
 
   return (
@@ -20,14 +24,16 @@ const IndexPlant = () => {
         <div className="card">
           <h5 className="card-header">Plants</h5>
           <div className="card-body">
-            <div class="button-wrapper">
-              <button
-                type="button"
-                className="btn btn-outline-secondary account-image-reset mb-4"
-              >
-                <i className="bx bx-reset d-block d-sm-none"></i>
-                <span className="d-none d-sm-block">Add New Plant</span>
-              </button>
+            <div className="button-wrapper">
+              <Link to={"/plants/create"}>
+                <button
+                  type="button"
+                  className="btn btn-secondary mb-4"
+                >
+                  <i className="bx bx-reset d-block d-sm-none"></i>
+                  <span className="d-none d-sm-block">Add New Plant</span>
+                </button>
+              </Link>
             </div>
 
             <div className="table-responsive text-nowrap">
@@ -48,27 +54,18 @@ const IndexPlant = () => {
                       <tr key={index}>
                         <td>{plant.name}</td>
                         <td>{plant.varieties}</td>
-                        <td>{plant.plant_type}</td>
+                        <td>{PLANT_TYPE_MAP[plant.plant_type]}</td>
                         <td>{plant.harvest_age} days</td>
-                        <td>{plant.status}</td>
+                        <td>{PLANT_STATUS_MAP[plant.status]}</td>
                         <td>
-                          <div className="dropdown">
+                          <Link to={"/plants/" + plant.id} className="nav-link">
                             <button
                               type="button"
                               className="btn p-0 dropdown-toggle hide-arrow"
-                              data-bs-toggle="dropdown"
                             >
-                              <i className="bx bx-dots-vertical-rounded"></i>
+                              <i className="bx bx-show-alt me-1"></i> Detail
                             </button>
-                            <div className="dropdown-menu">
-                              <a className="dropdown-item" href="#/">
-                                <i className="bx bx-edit-alt me-1"></i> Edit
-                              </a>
-                              <a className="dropdown-item" href="#/">
-                                <i className="bx bx-show-alt me-1"></i> Detail
-                              </a>
-                            </div>
-                          </div>
+                          </Link>
                         </td>
                       </tr>
                     ))}

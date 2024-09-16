@@ -7,10 +7,10 @@ const Sidebar = () => {
       <div className="app-brand demo">
         <a href="/" className="app-brand-link">
           <span className="app-brand-logo demo">
-            Logo
+            IoT
           </span>
           <span className="app-brand-text demo menu-text fw-bold ms-2">
-            Sneat
+            Farm
           </span>
         </a>
 
@@ -39,8 +39,26 @@ const Sidebar = () => {
             href="/plants"
             className="menu-link"
           >
-            <i className="menu-icon tf-icons bx bx-home-circle"></i>
+            <i className="menu-icon tf-icons bx bxs-tree"></i>
             <div data-i18n="Plants">Plants</div>
+          </a>
+        </li>
+        <li className="menu-item">
+          <a
+            href="/automations"
+            className="menu-link"
+          >
+            <i className="menu-icon tf-icons bx bxs-analyse"></i>
+            <div data-i18n="Automation History">Automation History</div>
+          </a>
+        </li>
+        <li className="menu-item">
+          <a
+            href="/installation-config"
+            className="menu-link"
+          >
+            <i className="menu-icon tf-icons bx bx-cog"></i>
+            <div data-i18n="Installation Config">Installation Config</div>
           </a>
         </li>
       </ul>

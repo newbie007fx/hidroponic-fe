@@ -46,7 +46,7 @@ const Home = () => {
             <div className="col-3 mb-3">
               <MeasureValue
                 dataType="water_ph"
-                image="chart-success.png"
+                image="ph.png"
                 alt="credit-card"
                 label="PH"
               />
@@ -54,7 +54,7 @@ const Home = () => {
             <div className="col-3 mb-3">
               <MeasureValue
                 dataType="water_temperature"
-                image="wallet-info.png"
+                image="temp.png"
                 alt="credit-card"
                 label="Temperature"
                 unit="°C"
@@ -63,7 +63,7 @@ const Home = () => {
             <div className="col-3 mb-3">
               <MeasureValue
                 dataType="nutrition_water_volume"
-                image="paypal.png"
+                image="volume.png"
                 alt="credit-card"
                 label="Nutrition Water Vol"
                 unit="&#13220;"
@@ -72,7 +72,7 @@ const Home = () => {
             <div className="col-3 mb-3">
               <MeasureValue
                 dataType="raw_water_volume"
-                image="cc-primary.png"
+                image="volume.png"
                 alt="credit-card"
                 label="Raw Water Vol"
                 unit="&#13220;"
@@ -96,7 +96,7 @@ const Home = () => {
           </div>
         </div>
         <div className="col-md-4 col-lg-4 order-2">
-          <AutomationHistory />
+          <AutomationHistory activePlant={activePlant} />
         </div>
       </div>
     </>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 
 import { login } from "../slices/auth";
@@ -39,8 +39,8 @@ const Login = () => {
     dispatch(login({ username, password }))
       .unwrap()
       .then(() => {
-        navigate("/");
-        window.location.reload();
+        navigate("/home");
+
       })
       .catch((e) => {
         console.log(e);
@@ -49,7 +49,7 @@ const Login = () => {
   };
 
   if (isLoggedIn) {
-    return <Navigate to="/" />;
+    return <Navigate to="/home" />;
   }
 
   return (
@@ -76,6 +76,7 @@ const Login = () => {
                 validationSchema={validationSchema}
                 onSubmit={handleLogin}
               >
+                {({ errors, touched }) => (
                 <Form>
                   <div className="mb-3">
                     <label htmlFor="username" className="form-label">
@@ -83,17 +84,13 @@ const Login = () => {
                     </label>
                     <Field
                       type="text"
-                      className="form-control"
+                      className={errors.username && touched.username ? "form-control  is-invalid" : "form-control"}
                       id="username"
                       name="username"
                       placeholder="Enter your username"
                       autoFocus
                     />
-                    <ErrorMessage
-                      name="username"
-                      component="div"
-                      className="alert alert-danger"
-                    />
+                    <div className="invalid-feedback">{errors.username}</div>
                   </div>
                   <div className="mb-3 form-password-toggle">
                     <div className="d-flex justify-content-between">
@@ -105,7 +102,7 @@ const Login = () => {
                       <Field
                         type="password"
                         id="password"
-                        className="form-control"
+                        className={errors.password && touched.password ? "form-control  is-invalid" : "form-control"}
                         name="password"
                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                         aria-describedby="password"
@@ -113,12 +110,8 @@ const Login = () => {
                       <span className="input-group-text cursor-pointer">
                         <i className="bx bx-hide"></i>
                       </span>
+                      <div className="invalid-feedback">{errors.password}</div>
                     </div>
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="alert alert-danger"
-                    />
                   </div>
                   <div className="mb-3">
                     <button
@@ -133,6 +126,7 @@ const Login = () => {
                     </button>
                   </div>
                 </Form>
+                )}
               </Formik>
 
               {message && (
